@@ -6,9 +6,8 @@ async function conn() {
   try {
     const DBUSER = process.env.DB_USER;
     const DBPASSWORD = process.env.DB_PASSWORD;
-
     await mongoose.connect(
-      `mongodb+srv://${DBUSER}:${DBPASSWORD}@drumcluster.zm8rt.mongodb.net/?retryWrites=true&w=majority&appName=DRUMCLUSTER`
+      `mongodb+srv://${DBUSER}:${DBPASSWORD}@stockflowcluster.vxotdwm.mongodb.net/?retryWrites=true&w=majority&appName=StockFlowCLUSTER`
     );
     console.log('Database connected successfully');
   } catch (error) {

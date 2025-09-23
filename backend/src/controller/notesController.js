@@ -8,16 +8,6 @@ class NotesController {
   async create(req, res) {
     try {
       const { titulo, link, conteudo } = req.body;
-      let image = req.file ? req.file.path : null;
-
-      if (image) {
-        const imageName = path.basename(image);
-        image = `/uploads/${imageName}`;
-      }
-
-      if (!image) {
-        return res.status(400).json({ message: 'Imagem não enviada.' });
-      }
 
       const authHeader = req.headers['authorization'];
       const token = authHeader && authHeader.split(' ')[1];
