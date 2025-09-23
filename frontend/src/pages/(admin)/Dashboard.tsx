@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Package, AlertTriangle, CheckCircle, Filter, TrendingUp, BarChart3, Clock } from "lucide-react";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Admin/AdminNavbar";
 import { useItems } from "@/contexts/ItemsContext";
 import { useState, useMemo } from "react";
 
@@ -13,7 +13,6 @@ const Dashboard = () => {
   const [filterPrioridade, setFilterPrioridade] = useState<string>("todos");
   const [filterSituacao, setFilterSituacao] = useState<string>("todos");
 
-  // Filtros e busca
   const filteredItems = useMemo(() => {
     return items.filter(item => {
       const matchesSearch = item.nome.toLowerCase().includes(searchTerm.toLowerCase());
@@ -24,7 +23,6 @@ const Dashboard = () => {
     });
   }, [items, searchTerm, filterPrioridade, filterSituacao]);
 
-  // Estatísticas
   const stats = useMemo(() => {
     const total = items.length;
     const emFalta = items.filter(item => item.situacao === "em-falta").length;
@@ -161,7 +159,6 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Lista de Itens */}
         <Card className="bg-gradient-card border-border shadow-card">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">

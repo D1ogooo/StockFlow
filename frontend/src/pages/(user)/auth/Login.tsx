@@ -28,27 +28,23 @@ const Login = () => {
 
     setIsLoading(true);
     
-    // Simulação de login
     setTimeout(() => {
       setIsLoading(false);
       toast({
         title: "Sucesso",
         description: "Login realizado com sucesso!",
       });
-      // Aqui você redirecionaria o usuário
     }, 1500);
   };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-primary opacity-10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary-glow opacity-10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="w-full max-w-md relative">
-        {/* Botão Voltar */}
         <div className="mb-6">
           <Button variant="ghost" asChild className="text-muted-foreground hover:text-foreground">
             <Link to="/" className="flex items-center space-x-2">

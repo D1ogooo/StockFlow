@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Package, Settings, BarChart } from "lucide-react";
 
 const Navbar = () => {
+  // const {} = useAuth();
+  const user = true;
   const location = useLocation();
 
   return (
@@ -33,17 +35,10 @@ const Navbar = () => {
             variant={location.pathname === "/admin" ? "default" : "ghost"}
             size="sm"
           >
-            <Link to="/admin" className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-2">
               <Settings className="h-4 w-4" />
               <span>Administração</span>
             </Link>
-          </Button>
-          <Button
-            asChild
-            variant={location.pathname === "/login" ? "default" : "ghost"}
-            size="sm"
-          >
-            <Link to="/login">Login</Link>
           </Button>
         </div>
       </div>

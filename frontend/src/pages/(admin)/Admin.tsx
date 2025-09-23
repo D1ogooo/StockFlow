@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trash2, Plus, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useItems } from "@/contexts/ItemsContext";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Admin/AdminNavbar";
 
 const Admin = () => {
   const { items, addItem, removeItem } = useItems();
