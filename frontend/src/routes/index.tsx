@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 export function Router() {
 //   const { user } = useAuth();
-  const user = true
+  const user = false
   let routes = null;
 
   if (!user) {

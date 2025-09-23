@@ -6,9 +6,9 @@ import { Route, Routes } from "react-router-dom";
 export function AdminRoutes() {
   return (
     <Routes>
-      <Route index element={<Admin />} />
+      <Route index element={<Dashboard />} />
       {/* <Route path="/admin" element={<Admin />} /> */}
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/admin" element={<Admin />} />
       <Route path="*" element={<NotFound />} />
     </Routes >
   )

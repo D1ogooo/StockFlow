@@ -3,15 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, LogIn, Package } from "lucide-react";
+import { Eye, EyeOff, LogIn, Package, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+const Register = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [secondShowPassword, setSecondShowPassword] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,14 +47,14 @@ const Login = () => {
       </div>
 
       <div className="w-full max-w-md relative">
-        {/* <div className="mb-6">
+        <div className="mb-6">
           <Button variant="ghost" asChild className="text-muted-foreground hover:text-foreground">
             <Link to="/" className="flex items-center space-x-2">
               <ArrowLeft className="h-4 w-4" />
               <span>Voltar</span>
             </Link>
           </Button>
-        </div> */}
+        </div>
 
         <Card className="bg-gradient-card border-border shadow-card">
           <CardHeader className="text-center">
@@ -96,6 +98,7 @@ const Login = () => {
                     className="bg-background/50 pr-10"
                     disabled={isLoading}
                   />
+
                   <Button
                     type="button"
                     variant="ghost"
@@ -110,6 +113,61 @@ const Login = () => {
                       <Eye className="h-4 w-4 text-muted-foreground" />
                     )}
                   </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Confirme sua senha</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={secondShowPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="bg-background/50 pr-10"
+                    disabled={isLoading}
+                  />
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setSecondShowPassword(!secondShowPassword)}
+                    disabled={isLoading}
+                  >
+                    {secondShowPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              {/* <div space-y-2>
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="bg-background/50 pr-10 mt-10"
+                  disabled={isLoading}
+                />
+              </div> */}
+              
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="remember"
+                    className="rounded border-border"
+                  />
+                  <Label htmlFor="remember" className="text-muted-foreground cursor-pointer">
+                    Lembrar de mim
+                  </Label>
                 </div>
               </div>
 
@@ -134,10 +192,10 @@ const Login = () => {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
-                Não tem uma conta?{" "}
-                <Link to='/register'>
+                Já possui uma conta?{" "}
+                <Link to='/'>
                   <Button variant="link" className="p-0 h-auto text-primary">
-                    Cadastre-se
+                    Faça login
                   </Button>
                 </Link>
               </p>
@@ -155,4 +213,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

@@ -22,10 +22,10 @@ const Navbar = () => {
         <div className="flex items-center space-x-4">
           <Button
             asChild
-            variant={location.pathname === "/dashboard" ? "default" : "ghost"}
+            variant={location.pathname === "/" ? "default" : "ghost"}
             size="sm"
           >
-            <Link to="/dashboard" className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-2">
               <BarChart className="h-4 w-4" />
               <span>Dashboard</span>
             </Link>
@@ -35,7 +35,7 @@ const Navbar = () => {
             variant={location.pathname === "/admin" ? "default" : "ghost"}
             size="sm"
           >
-            <Link to="/" className="flex items-center space-x-2">
+            <Link to="/admin" className="flex items-center space-x-2">
               <Settings className="h-4 w-4" />
               <span>Administração</span>
             </Link>
