@@ -45,15 +45,6 @@ const Login = () => {
       </div>
 
       <div className="w-full max-w-md relative">
-        {/* <div className="mb-6">
-          <Button variant="ghost" asChild className="text-muted-foreground hover:text-foreground">
-            <Link to="/" className="flex items-center space-x-2">
-              <ArrowLeft className="h-4 w-4" />
-              <span>Voltar</span>
-            </Link>
-          </Button>
-        </div> */}
-
         <Card className="bg-gradient-card border-border shadow-card">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
@@ -147,7 +138,7 @@ const Login = () => {
 
         <div className="mt-6 text-center">
           <p className="text-xs text-muted-foreground">
-            © 2024 StockFlow. Todos os direitos reservados.
+            © 2025 StockFlow. Todos os direitos reservados.
           </p>
         </div>
       </div>

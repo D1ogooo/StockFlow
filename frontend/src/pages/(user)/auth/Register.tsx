@@ -146,31 +146,6 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* <div space-y-2>
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="bg-background/50 pr-10 mt-10"
-                  disabled={isLoading}
-                />
-              </div> */}
-              
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="remember"
-                    className="rounded border-border"
-                  />
-                  <Label htmlFor="remember" className="text-muted-foreground cursor-pointer">
-                    Lembrar de mim
-                  </Label>
-                </div>
-              </div>
-
               <Button
                 type="submit"
                 className="w-full bg-gradient-primary hover:shadow-glow transition-all duration-300"
@@ -179,12 +154,12 @@ const Register = () => {
                 {isLoading ? (
                   <div className="flex items-center space-x-2">
                     <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin"></div>
-                    <span>Entrando...</span>
+                    <span>Registrando...</span>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2">
                     <LogIn className="h-4 w-4" />
-                    <span>Entrar</span>
+                    <span>Registrar</span>
                   </div>
                 )}
               </Button>
@@ -205,7 +180,7 @@ const Register = () => {
 
         <div className="mt-6 text-center">
           <p className="text-xs text-muted-foreground">
-            © 2024 StockFlow. Todos os direitos reservados.
+            © 2025 StockFlow. Todos os direitos reservados.
           </p>
         </div>
       </div>
