@@ -21,43 +21,31 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
     }, []);
 
-    async function register(nome: string, email: string, password: string) {
-        try {
-            await api.post('/users/create', {
-                nome,
-                email,
-                password,
-            });
-
-            ALERTA({
-                title: 'Conta criada com sucesso!',
-                description: 'Agora você pode fazer login!',
-                status: 'success',
-            }, toast);
-
-        } catch (error: any) {
-            ALERTA({
-                title: 'Erro ao criar conta',
-                description: `${error.response?.data?.message}`,
-                status: 'error',
-            }, toast);
-        }
+async function register(nome: string, email: string, password: string) {
+    try {
+        await api.post('/users/create', { nome, email, password });
+    } catch (error: any) {
+        const msg = error?.response?.data?.message || 'Erro ao registrar usuário';
+        throw new Error(msg);
     }
+}
 
-    async function login(email: string, password: string) {
-        try {
-            const res = await api.post("/users/auth", { email, password });
-            const { user, token } = res.data;
+async function login(email: string, password: string) {
+    try {
+        const res = await api.post("/users/auth", { email, password });
+        const { user, token } = res.data;
 
             localStorage.setItem("@StockFlow:user", JSON.stringify(user));
             localStorage.setItem("@StockFlow:token", token);
 
             api.defaults.headers.authorization = `Bearer ${token}`;
             setData({ user, token });
-        } catch (error) {
-            alert("Não foi possível logar.");
+        } catch (error: any) {
+            const msg = error?.response?.data?.message || 'Não foi possível logar';
+            throw new Error(msg);
         }
     }
+
 
     async function loggout() {
         localStorage.removeItem("@StockFlow:user");

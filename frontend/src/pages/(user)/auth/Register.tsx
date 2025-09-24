@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, LogIn, Package, ArrowLeft } from "lucide-react";
-import { useToast } from "@chakra-ui/toast";
 import { Link } from "react-router-dom";
+import { useToast } from "../../../hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 
 const Register = () => {
@@ -16,24 +16,25 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [secondShowPassword, setSecondShowPassword] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const toast = useToast();
+  const { toast } = useToast();
   const { register } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(nome, email, password, confirmPassword)
 
     if (!nome || !email || !password || !confirmPassword) {
       toast({
+        variant: "destructive",
         title: "Erro",
         description: "Preencha todos os campos",
-        variant: "destructive",
       });
       return;
     }
 
     if (password !== confirmPassword) {
       toast({
-        title: "Erro",
+        title: "Error",
         description: "As senhas não coincidem",
         variant: "destructive",
       });
@@ -41,25 +42,21 @@ const Register = () => {
     }
 
     try {
-    await register(nome, email, password);
-    toast({
-      title: "Sucesso",
-      description: "Usuário registrado 😉",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
-  } catch (error) {
-    toast({
-      title: "Erro",
-      description: "Não foi possível registrar o usuário 🤷‍♀️",
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-    });
-   } finally {
-    setIsLoading(false);
-   }
+      await register(nome, email, password);
+      toast({
+        title: "Sucesso",
+        variant: "default",
+        description: "Usuário registrado 😉",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        variant: "destructive",
+        description: `${error.message} ❌` || "Erro inesperado",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -100,7 +97,7 @@ const Register = () => {
                 <Label htmlFor="email">Nome</Label>
                 <Input
                   id="email"
-                  type="email"
+                  type="text"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   placeholder="Diogo Marques..."

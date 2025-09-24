@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, LogIn, Package } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useToast } from "@chakra-ui/toast";
+import { useToast } from "../../../hooks/use-toast";
 // import type { AlertType } from "../../@types/tipages";
 
 const Login = () => {
@@ -15,7 +15,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
-  const toast = useToast();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +23,7 @@ const Login = () => {
     if (!email || !password) {
       toast({
         title: "Erro",
-        description: "Preencha todos os campos",
+        description: "Preencha todos os campos ❌",
         variant: "destructive",
       });
       return;
@@ -33,18 +33,14 @@ const Login = () => {
     await login(email, password);
     toast({
       title: "Sucesso",
-      description: "Bem vindo😘 ao sistema!",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
+      description: "Bem-vindo ao sistema 😘",
+      variant: "default",
     });
   } catch (error) {
     toast({
       title: "Erro",
       description: "Não foi possível logar 🤷‍♀️",
-      status: "error",
-      duration: 3000,
-      isClosable: true,
+      variant: "default",
     });
    } finally {
     setIsLoading(false);

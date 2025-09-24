@@ -1,17 +1,26 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "../../hooks/use-toast"
+import { useAuth } from "../../hooks/useAuth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import { Package, Settings, BarChart } from "lucide-react";
+import { ToastAction } from "../ui/toast";
 
 const Navbar = () => {
-  const { loggout } = useAuth();
+  useAuth();
   const user = true;
   const location = useLocation();
-  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { loggout } = useAuth();
 
   function handleLoggout() {
-    loggout();
-    navigate(0);
+    setTimeout(() => {
+      loggout();
+    }, 1000);
+    toast({
+    variant: "default",
+    title: "Muito obrigado por usar o StockFlow!",
+    description: "Até logo 👋",
+   })
   }
 
   return (

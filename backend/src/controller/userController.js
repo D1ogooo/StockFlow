@@ -7,7 +7,7 @@ class UsersController {
   async create(req, res) {
     try {
       const { nome, email, password } = req.body;
-
+      console.log(nome,email,password)
       const userExist = await User.findOne({ email });
       if (userExist) {
         return res.status(409).json({ message: 'Email já cadastrado' });
