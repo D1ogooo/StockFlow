@@ -1,11 +1,10 @@
-// import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { AuthRoutes } from './app.routes';
 import { AdminRoutes } from './admin.routes';
 import { BrowserRouter } from 'react-router-dom';
 
 export function Router() {
-//   const { user } = useAuth();
-  const user = true
+  const { user } = useAuth();
   let routes = null;
 
   if (!user) {

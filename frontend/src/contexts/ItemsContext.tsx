@@ -1,8 +1,9 @@
+import axios from 'axios'
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 export interface Item {
   id: string;
-  nome: string;
+  titulo: string;
   quantidade: number;
   prioridade: "baixa" | "media" | "alta";
   situacao: "em-dia" | "em-falta";
@@ -16,6 +17,7 @@ interface ItemsContextType {
   updateItem: (id: string, updates: Partial<Item>) => void;
 }
 
+
 const ItemsContext = createContext<ItemsContextType | undefined>(undefined);
 
 export const useItems = () => {
@@ -28,6 +30,16 @@ export const useItems = () => {
 
 export const ItemsProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<Item[]>([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/stock/show')
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar itens:", error);
+      });
+  })
 
   // Carregar dados do localStorage na inicialização
   useEffect(() => {
@@ -56,7 +68,7 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateItem = (id: string, updates: Partial<Item>) => {
-    setItems(prev => prev.map(item => 
+    setItems(prev => prev.map(item =>
       item.id === id ? { ...item, ...updates } : item
     ));
   };

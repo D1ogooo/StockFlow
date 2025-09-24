@@ -1,11 +1,18 @@
-import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Package, Settings, BarChart } from "lucide-react";
 
 const Navbar = () => {
-  // const {} = useAuth();
+  const { loggout } = useAuth();
   const user = true;
   const location = useLocation();
+  const navigate = useNavigate();
+
+  function handleLoggout() {
+    loggout();
+    navigate(0);
+  }
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -40,6 +47,11 @@ const Navbar = () => {
               <span>Administração</span>
             </Link>
           </Button>
+          {user &&
+            <Button variant="destructive" size="sm" onClick={handleLoggout}>
+              Sair
+            </Button>
+          }
         </div>
       </div>
     </nav>

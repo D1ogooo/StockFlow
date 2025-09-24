@@ -14,8 +14,8 @@ const Dashboard = () => {
   const [filterSituacao, setFilterSituacao] = useState<string>("todos");
 
   const filteredItems = useMemo(() => {
-    return items.filter(item => {
-      const matchesSearch = item.nome.toLowerCase().includes(searchTerm.toLowerCase());
+    return items.filter((item) => {
+      const matchesSearch = item.titulo.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesPrioridade = filterPrioridade === "todos" || item.prioridade === filterPrioridade;
       const matchesSituacao = filterSituacao === "todos" || item.situacao === filterSituacao;
       
@@ -195,7 +195,7 @@ const Dashboard = () => {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 mb-3">
-                          <h3 className="text-lg font-semibold">{item.nome}</h3>
+                          <h3 className="text-lg font-semibold">{item.titulo}</h3>
                           <div className="flex items-center space-x-1 text-muted-foreground">
                             {getPriorityIcon(item.prioridade)}
                           </div>

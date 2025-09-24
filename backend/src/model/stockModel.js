@@ -7,10 +7,16 @@ const ItemsSchema = new mongoose.Schema({
   },
   priodade: {
     type: String,
+    enum: ['baixa', 'media', 'alta'],
+    required: true,
+  },
+  quantidade: {
+    type: Number,
     required: true,
   },
   situacao: {
     type: String,
+    enum: ['em-dia', 'em-falta'],
     required: true,
   },
   createdAt: {

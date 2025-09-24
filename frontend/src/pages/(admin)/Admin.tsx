@@ -9,10 +9,11 @@ import { Trash2, Plus, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useItems } from "@/contexts/ItemsContext";
 import Navbar from "@/components/Admin/AdminNavbar";
+import { api } from "@/services/api";
 
 const Admin = () => {
   const { items, addItem, removeItem } = useItems();
-  const [nome, setNome] = useState("");
+  const [titulo, setTitulo] = useState("");
   const [quantidade, setQuantidade] = useState("");
   const [prioridade, setPrioridade] = useState<"baixa" | "media" | "alta">("media");
   const [situacao, setSituacao] = useState<"em-dia" | "em-falta">("em-dia");
@@ -21,7 +22,7 @@ const Admin = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!nome || !quantidade) {
+    if (!titulo || !quantidade) {
       toast({
         title: "Erro",
         description: "Preencha todos os campos obrigatórios",
@@ -31,16 +32,30 @@ const Admin = () => {
     }
 
     addItem({
-      nome,
+      titulo,
       quantidade: parseInt(quantidade),
       prioridade,
       situacao,
     });
 
-    setNome("");
+    setTitulo("");
     setQuantidade("");
     setPrioridade("media");
     setSituacao("em-dia");
+
+    try {
+      api.post('/stock/create', {
+      titulo,
+      quantidade: parseInt(quantidade),
+      prioridade,
+      situacao,
+    });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível adicionar o item ao servidor",
+      });
+    }
 
     toast({
       title: "Sucesso",
@@ -101,8 +116,8 @@ const Admin = () => {
                   <Label htmlFor="nome">Nome do Item</Label>
                   <Input
                     id="nome"
-                    value={nome}
-                    onChange={(e) => setNome(e.target.value)}
+                    value={titulo}
+                    onChange={(e) => setTitulo(e.target.value)}
                     placeholder="Digite o nome do item"
                     className="bg-background/50"
                   />
@@ -182,7 +197,7 @@ const Admin = () => {
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h3 className="font-medium mb-2">{item.nome}</h3>
+                          <h3 className="font-medium mb-2">{item.titulo}</h3>
                           <div className="flex flex-wrap gap-2 mb-2">
                             <Badge variant="outline">
                               Qtd: {item.quantidade}
