@@ -1,11 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Package, AlertTriangle, CheckCircle, Filter, TrendingUp, BarChart3, Clock } from "lucide-react";
 import Navbar from "@/components/Admin/AdminNavbar";
 import { useItems } from "@/contexts/ItemsContext";
 import { useState, useMemo } from "react";
+import { ListedItems } from "@/components/Admin/ListedItems";
 
 const Dashboard = () => {
   const { items } = useItems();
@@ -166,12 +166,27 @@ const Dashboard = () => {
               <span>Itens ({filteredItems.length})</span>
             </CardTitle>
             <CardDescription>
-              {filteredItems.length === 0 && items.length > 0 
+              {/* {filteredItems.length === 0 && items.length > 0 
                 ? "Nenhum item encontrado com os filtros aplicados" 
-                : "Lista completa de itens cadastrados"}
+                // : <ListedItems key={item.id} item={item} />}
+                : <ListedItems items={items} />} */}
+              {filteredItems.length === 0 && items.length > 0 
+                ? <div className="text-center py-12 text-muted-foreground">
+                <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg mb-2">
+                  {items.length === 0 ? "Nenhum item cadastrado ainda" : "Nenhum item encontrado"}
+                </p>
+                <p className="text-sm">
+                  {items.length === 0 
+                    ? "Acesse a página de administração para começar a cadastrar itens" 
+                    : "Tente ajustar os filtros de busca"}
+                </p>
+              </div>
+                // : <ListedItems key={item.id} item={item} />}
+                : <ListedItems items={items} />}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          {/* <CardContent>
             {filteredItems.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
@@ -231,7 +246,7 @@ const Dashboard = () => {
                 ))}
               </div>
             )}
-          </CardContent>
+          </CardContent> */}
         </Card>
       </div>
     </div>

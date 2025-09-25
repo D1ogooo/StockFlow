@@ -5,7 +5,7 @@ const ItemsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  priodade: {
+  prioridade: {
     type: String,
     enum: ['baixa', 'media', 'alta'],
     required: true,

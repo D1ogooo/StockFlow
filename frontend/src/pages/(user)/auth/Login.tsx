@@ -28,7 +28,8 @@ const Login = () => {
       });
       return;
     }
-
+   
+  setIsLoading(true);
    try {
     await login(email, password);
     toast({

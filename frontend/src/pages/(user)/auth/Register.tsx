@@ -40,7 +40,8 @@ const Register = () => {
       });
       return;
     }
-
+    
+    setIsLoading(true);
     try {
       await register(nome, email, password);
       toast({

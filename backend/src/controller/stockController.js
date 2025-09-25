@@ -7,7 +7,7 @@ require('dotenv').config();
 class StockContrller {
   async create(req, res) {
     try {
-      const { titulo, priodade, situacao } = req.body;
+      const { titulo, prioridade, quantidade, situacao } = req.body;
 
       const authHeader = req.headers['authorization'];
       const token = authHeader && authHeader.split(' ')[1];
@@ -19,7 +19,8 @@ class StockContrller {
 
       const newItem = new Item({
        titulo,
-       priodade,
+       prioridade,
+       quantidade,
        situacao
       })
 
