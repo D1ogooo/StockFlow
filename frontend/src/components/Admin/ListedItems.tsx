@@ -33,46 +33,41 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Item } from "@/contexts/ItemsContext"
+
+// id: "m5gr84i9",
+//   amount: 316,
+//   status: "success",
+//   email: "ken99@example.com",
+
+
+export type Payment = {
+  _id: string,
+  titulo: string,
+  prioridade: "baixa" | "media" | "alta",
+  quantidade: number,
+  situacao: "em-dia" | "em-falta",
+  date: string
+}
 
 const data: Payment[] = [
   {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
+    _id: "m5gr84i9",
+    titulo: "Sabão em pedra",
+    prioridade: "baixa",
+    situacao: "em-falta",
+    quantidade: 0,
+    date: "12/05/2025",
   },
   {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
+    _id: "m5gr84i9",
+    titulo: "Sabão em pedra",
+    prioridade: "alta",
+    situacao: "em-dia",
+    quantidade: 5,
+    date: "20/09/2025",
   },
 ]
-
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -98,71 +93,76 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "titulo",
+    header: "Titulo",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("titulo")}</div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "prioridade",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
+          className="h-8 p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Prioridade
           <ArrowUpDown />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("prioridade")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "situacao",
+    header: () => <div className="text-right">Situacao</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      // const amount = parseFloat(row.getValue("situacao"))
 
       // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
+      // const formatted = new Intl.NumberFormat("en-US", {
+      //   style: "currency",
+      //   currency: "USD",
+      // }).format(amount)
 
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className="text-right font-medium">{row.getValue("situacao")}</div>
     },
   },
   {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original
-
+    accessorKey: "quantidade",
+    header: ({ column }) => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          variant="ghost"
+          className="h-8 p-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Quantidade
+          <ArrowUpDown />
+        </Button>
       )
     },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("quantidade")}</div>,
   },
+   {
+    accessorKey: "date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="h-8 p-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date
+          <ArrowUpDown />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("date")}</div>,
+  },
+
 ]
 
 export function ListedItems({ items }: { items: Item[] }) {
@@ -242,9 +242,9 @@ export function ListedItems({ items }: { items: Item[] }) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -281,6 +281,7 @@ export function ListedItems({ items }: { items: Item[] }) {
           </TableBody>
         </Table>
       </div>
+      
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}

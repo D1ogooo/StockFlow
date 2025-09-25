@@ -11,7 +11,6 @@ class StockContrller {
 
       const authHeader = req.headers['authorization'];
       const token = authHeader && authHeader.split(' ')[1];
-      // const secret = process.env.SECRET_KEY;
 
       if (!token) {
         return res.status(401).json({ message: 'Não autorizado' });
@@ -43,7 +42,6 @@ class StockContrller {
 
       const getItems = await Item.find();
 
-      // await getItems.save();
       res.status(201).json(getItems);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -56,7 +54,6 @@ class StockContrller {
     try {
       const authHeader = req.headers['authorization'];
       const token = authHeader && authHeader.split(' ')[1];
-      // const secret = process.env.SECRET_KEY;
       
       if (!token) {
         return res.status(401).json({ message: 'Não autorizado' });
@@ -88,7 +85,6 @@ class StockContrller {
       if (!token) {
         return res.status(401).json({ message: 'Não autorizado' });
       }
-
       // res.status(200).json(notes);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -97,7 +93,6 @@ class StockContrller {
 
   async update(req, res) {
     try {
-
       // res.status(200).json(notes);
     } catch (error) {
       res.status(500).json({ message: error.message });
