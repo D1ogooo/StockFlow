@@ -107,7 +107,7 @@ const Dashboard = () => {
             <CardContent className="p-4 text-center">
               <BarChart3 className="h-8 w-8 mx-auto mb-2 text-primary-glow" />
               <div className="text-2xl font-bold text-primary-glow">{stats.quantidadeTotal}</div>
-              <div className="text-sm text-muted-foreground">Quantidade Total</div>
+              <div className="text-sm text-muted-foreground">Quantidade total de cada item</div>
             </CardContent>
           </Card>
         </div>

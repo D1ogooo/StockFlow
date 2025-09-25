@@ -17,6 +17,7 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   loggout: () => void
   user?: {
+    token: any;
     id: string;
     email: string;
   };

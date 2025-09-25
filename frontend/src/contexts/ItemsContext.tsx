@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useAuth } from '../hooks/useAuth'
+import { api } from '@/services/api';
 
 export interface Item {
-  id: string;
+  _id?: string;
   titulo: string;
   quantidade: number;
   prioridade: "baixa" | "media" | "alta";
@@ -30,24 +32,41 @@ export const useItems = () => {
 
 export const ItemsProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<Item[]>([]);
+  const { user, token } = useAuth();
+
+  //  useEffect(() => {
+  //   api.get('/stock/show')
+  //     .then((res) => {
+  //       setItems(res.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Erro ao buscar itens:", error);
+  //     });
+  //  }, [])
+
+  // // Carregar dados do localStorage na inicialização
+  // useEffect(() => {
+  //   const savedItems = localStorage.getItem("stockflow-items");
+  //   if (savedItems) {
+  //     setItems(JSON.parse(savedItems));
+  //   }
+  // }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/stock/show')
-      .then((response) => {
-        setItems(response.data);
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar itens:", error);
-      });
-  })
+    if (!token) return;
 
-  // Carregar dados do localStorage na inicialização
-  useEffect(() => {
     const savedItems = localStorage.getItem("stockflow-items");
     if (savedItems) {
       setItems(JSON.parse(savedItems));
     }
-  }, []);
+    api.get('/stock/show', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => setItems(res.data))
+      .catch((error) => console.error("Erro ao buscar itens:", error));
+  }, [user]);
 
   // Salvar no localStorage sempre que items mudar
   useEffect(() => {
@@ -57,19 +76,19 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
   const addItem = (itemData: Omit<Item, "id" | "criadoEm">) => {
     const newItem: Item = {
       ...itemData,
-      id: Date.now().toString(),
+      _id: Date.now().toString(),
       criadoEm: new Date().toISOString(),
     };
     setItems(prev => [...prev, newItem]);
   };
 
   const removeItem = (id: string) => {
-    setItems(prev => prev.filter(item => item.id !== id));
+    setItems(prev => prev.filter(item => item._id !== id));
   };
 
   const updateItem = (id: string, updates: Partial<Item>) => {
     setItems(prev => prev.map(item =>
-      item.id === id ? { ...item, ...updates } : item
+      item._id === id ? { ...item, ...updates } : item
     ));
   };
 

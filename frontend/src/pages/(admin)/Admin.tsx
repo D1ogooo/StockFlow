@@ -64,11 +64,26 @@ const Admin = () => {
   };
 
   const handleRemoveItem = (id: string) => {
-    removeItem(id);
-    toast({
-      title: "Item removido",
-      description: "O item foi removido da lista",
-    });
+    setTimeout(async () => {
+     await removeItem(id);
+    }, 1200)
+    api.delete(`/stock/delete/${id}`)
+     .then((e) => {
+       toast({
+         variant: "default",
+         title: "Sucesso!",
+         description: `${e.data?.message || "Item removido com sucesso!"} ✔`,
+       });
+     })
+     .catch((e) => {
+      //  const msg = error.response?.data?.message || 'Não foi possível remover o item';
+       toast({
+         title: "Erro",
+         variant: "destructive",
+         description: `${e.response?.data?.message || 'Não foi possível remover o item'}`,
+       });
+     })
+
   };
 
   const getPriorityColor = (prioridade: string) => {
@@ -192,9 +207,9 @@ const Admin = () => {
                 <div className="space-y-4 max-h-96 overflow-y-auto">
                   {items.map((item) => (
                     <div
-                      key={item.id}
+                      key={item._id}
                       className="p-4 bg-background/30 rounded-lg border border-border hover:bg-background/50 transition-colors"
-                    >
+                      >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h3 className="font-medium mb-2">{item.titulo}</h3>
@@ -216,7 +231,7 @@ const Admin = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleRemoveItem(item.id)}
+                          onClick={() => handleRemoveItem(item._id)}
                           className="text-destructive hover:text-destructive hover:bg-destructive/10"
                         >
                           <Trash2 className="h-4 w-4" />

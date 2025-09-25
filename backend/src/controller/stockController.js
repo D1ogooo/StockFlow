@@ -51,16 +51,28 @@ class StockContrller {
   }
 
   async delete(req, res) {
+    const idparam = req.params.id
+    console.log(idparam)
     try {
       const authHeader = req.headers['authorization'];
       const token = authHeader && authHeader.split(' ')[1];
-      const secret = process.env.SECRET_KEY;
-
+      // const secret = process.env.SECRET_KEY;
+      
       if (!token) {
         return res.status(401).json({ message: 'Não autorizado' });
       }
+      
+      const itemId = req.params.id
 
-      // res.status(200).json({ message: 'Nota deletada com sucesso' });
+      const item = await Item.findOne({ _id: itemId });
+      if (!item) {
+        return res.status(404).json({ message: 'Item não encontrado' });
+      }
+      console.log("resultado de busca do item:", item);
+      console.log("id do item:", itemId);
+
+      const itemDeleted = await Item.findByIdAndDelete(itemId);
+      res.status(200).json({ message: 'Nota deletada com sucesso', itemDeleted });
     } catch (error) {
       console.error('Erro ao excluir nota:', error);
       res.status(500).json({ message: error.message });

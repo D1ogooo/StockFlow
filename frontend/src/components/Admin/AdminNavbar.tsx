@@ -11,8 +11,10 @@ const Navbar = () => {
   const location = useLocation();
   const { toast } = useToast();
   const { loggout } = useAuth();
+  const navigate = useNavigate();
 
   function handleLoggout() {
+    navigate('/')
     setTimeout(() => {
       loggout();
     }, 1000);
