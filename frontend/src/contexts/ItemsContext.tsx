@@ -14,9 +14,9 @@ export interface Item {
 
 interface ItemsContextType {
   items: Item[];
-  addItem: (item: Omit<Item, "id" | "criadoEm">) => void;
-  removeItem: (id: string) => void;
-  updateItem: (id: string, updates: Partial<Item>) => void;
+  addItem: (item: Omit<Item, "_id" | "criadoEm">) => void;
+  removeItem: (_id: string) => void;
+  updateItem: (_id: string, updates: Partial<Item>) => void;
 }
 
 
@@ -33,24 +33,6 @@ export const useItems = () => {
 export const ItemsProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<Item[]>([]);
   const { user, token } = useAuth();
-
-  //  useEffect(() => {
-  //   api.get('/stock/show')
-  //     .then((res) => {
-  //       setItems(res.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Erro ao buscar itens:", error);
-  //     });
-  //  }, [])
-
-  // // Carregar dados do localStorage na inicialização
-  // useEffect(() => {
-  //   const savedItems = localStorage.getItem("stockflow-items");
-  //   if (savedItems) {
-  //     setItems(JSON.parse(savedItems));
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (!token) return;
