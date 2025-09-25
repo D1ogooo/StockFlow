@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useEffect } from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,6 +13,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { format, startOfDay } from 'date-fns'
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -34,11 +36,14 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Item } from "@/contexts/ItemsContext"
+import { api } from "@/services/api"
+import { useToast } from '@/hooks/use-toast'
 
 // id: "m5gr84i9",
 //   amount: 316,
 //   status: "success",
 //   email: "ken99@example.com",
+
 
 
 export type Payment = {
@@ -65,9 +70,12 @@ const data: Payment[] = [
     prioridade: "alta",
     situacao: "em-dia",
     quantidade: 5,
+    createdAt: "2025-05-12T15:30:00Z",
     date: "20/09/2025",
   },
 ]
+
+
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -146,7 +154,7 @@ export const columns: ColumnDef<Payment>[] = [
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("quantidade")}</div>,
   },
-   {
+  {
     accessorKey: "date",
     header: ({ column }) => {
       return (
@@ -160,12 +168,32 @@ export const columns: ColumnDef<Payment>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("date")}</div>,
+    
+    cell: ({ row }) => {
+      const ab = row.original.createdAt
+      return <div className="lowercase">{format(ab, "dd/MM/yyyy HH:mm")}</div>
+    },
   },
-
 ]
 
 export function ListedItems({ items }: { items: Item[] }) {
+  const { toast } = useToast();
+  const [payments, setPayments] = React.useState<Payment[]>([])
+
+  useEffect(() => {
+    api.get('/stock/show')
+      .then((e) => {
+        setPayments(e.data)
+      })
+      .catch((err) => {
+        toast({
+          variant: "destructive",
+          title: "Erro",
+          description: `${err.response?.data?.message || "Não foi possível carregar os itens do servidor"}`,
+        });
+      })
+  }, [])
+  
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -175,7 +203,7 @@ export function ListedItems({ items }: { items: Item[] }) {
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data,
+    data: payments,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -281,29 +309,11 @@ export function ListedItems({ items }: { items: Item[] }) {
           </TableBody>
         </Table>
       </div>
-      
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
         </div>
       </div>
     </div>
