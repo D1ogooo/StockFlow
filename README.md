@@ -21,6 +21,17 @@ OBS: No frontend foi usada a IA lovable para criação do design da aplicação
 - jspdf-autotable
 ```
 
+👨‍🔬 (backend) Tecnologias Utilizadas:
+
+```
+- Node
+- Javascript
+- Mongoose
+- MongoDB
+- Bcrypt
+- Jsonwebtoken
+```
+
        👩‍💻 -- Ideias para melhoras futuras -- 👩‍💻
 * Sistema de perfil de usuário
 * Sistema para armazemaneto de dados passados para casos de perca ou prevenção
