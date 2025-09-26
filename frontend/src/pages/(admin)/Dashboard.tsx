@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Package, AlertTriangle, CheckCircle, Filter, TrendingUp, BarChart3, Clock } from "lucide-react";
+import { Package, AlertTriangle, CheckCircle, Filter, TrendingUp, BarChart3, Clock, Badge } from "lucide-react";
 import Navbar from "@/components/Admin/AdminNavbar";
 import { useItems } from "@/contexts/ItemsContext";
 import { useState, useMemo } from "react";
@@ -166,10 +166,7 @@ const Dashboard = () => {
               <span>Itens ({filteredItems.length})</span>
             </CardTitle>
             <CardDescription>
-              {/* {filteredItems.length === 0 && items.length > 0 
-                ? "Nenhum item encontrado com os filtros aplicados" 
-                // : <ListedItems key={item.id} item={item} />}
-                : <ListedItems items={items} />} */}
+              
               {filteredItems.length === 0 && items.length > 0 
                 ? <div className="text-center py-12 text-muted-foreground">
                 <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
@@ -182,11 +179,10 @@ const Dashboard = () => {
                     : "Tente ajustar os filtros de busca"}
                 </p>
               </div>
-                // : <ListedItems key={item.id} item={item} />}
                 : <ListedItems items={items} />}
             </CardDescription>
           </CardHeader>
-          {/* <CardContent>
+          <CardContent>
             {filteredItems.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
@@ -200,11 +196,11 @@ const Dashboard = () => {
                 </p>
               </div>
             ) : (
-              <div className="grid gap-4">
+              <div className="grid gap-4 max-h-[400px] overflow-y-auto">
                 {filteredItems.map((item, index) => (
                   <div
-                    key={item.id}
-                    className="p-6 bg-background/30 rounded-lg border border-border hover:bg-background/50 transition-all duration-300 hover-scale animate-fade-in"
+                    key={item._id}
+                    className="p-6 bg-background/30 rounded-lg border border-border"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="flex items-start justify-between">
@@ -246,7 +242,7 @@ const Dashboard = () => {
                 ))}
               </div>
             )}
-          </CardContent> */}
+          </CardContent>
         </Card>
       </div>
     </div>
