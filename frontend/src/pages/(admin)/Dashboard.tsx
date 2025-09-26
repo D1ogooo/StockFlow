@@ -1,11 +1,27 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Package, AlertTriangle, CheckCircle, Filter, TrendingUp, BarChart3, Clock, Badge } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Package,
+  AlertTriangle,
+  CheckCircle,
+  Filter,
+  TrendingUp,
+  BarChart3,
+  Clock,
+} from "lucide-react";
 import Navbar from "@/components/Admin/AdminNavbar";
 import { useItems } from "@/contexts/ItemsContext";
 import { useState, useMemo } from "react";
-import { ListedItems } from "@/components/Admin/ListedItems";
+import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
   const { items } = useItems();
@@ -13,50 +29,83 @@ const Dashboard = () => {
   const [filterPrioridade, setFilterPrioridade] = useState<string>("todos");
   const [filterSituacao, setFilterSituacao] = useState<string>("todos");
 
+  // --- Filtros ---
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
-      const matchesSearch = item.titulo.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesPrioridade = filterPrioridade === "todos" || item.prioridade === filterPrioridade;
-      const matchesSituacao = filterSituacao === "todos" || item.situacao === filterSituacao;
+      const matchesSearch = item.titulo
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesPrioridade =
+        filterPrioridade === "todos" || item.prioridade === filterPrioridade;
+      const matchesSituacao =
+        filterSituacao === "todos" || item.situacao === filterSituacao;
 
       return matchesSearch && matchesPrioridade && matchesSituacao;
     });
   }, [items, searchTerm, filterPrioridade, filterSituacao]);
 
+  // --- Estatísticas ---
   const stats = useMemo(() => {
     const total = items.length;
-    const emFalta = items.filter(item => item.situacao === "em-falta").length;
-    const emDia = items.filter(item => item.situacao === "em-dia").length;
-    const altaPrioridade = items.filter(item => item.prioridade === "alta").length;
-    const quantidadeTotal = items.reduce((sum, item) => sum + item.quantidade, 0);
+    const emFalta = items.filter((i) => i.situacao === "em-falta").length;
+    const emDia = items.filter((i) => i.situacao === "em-dia").length;
+    const altaPrioridade = items.filter((i) => i.prioridade === "alta").length;
+    const quantidadeTotal = items.reduce((sum, i) => sum + i.quantidade, 0);
 
     return { total, emFalta, emDia, altaPrioridade, quantidadeTotal };
   }, [items]);
 
   const getPriorityColor = (prioridade: string) => {
     switch (prioridade) {
-      case "alta": return "bg-[#C13839] text-[#fff] pl-2 pr-2 rounded-[10px]";
-      case "media": return "bg-[#5822B1] text-[#fff] pl-2 pr-2 rounded-[10px]";
-      case "baixa": return "bg-[#212125] text-[#fff] pl-2 pr-2 rounded-[10px]";
-      default: return "default";
+      case "alta":
+        return "bg-[#C13839] text-[#fff] pl-2 pr-2 rounded-[10px]";
+      case "media":
+        return "bg-[#5822B1] text-[#fff] pl-2 pr-2 rounded-[10px]";
+      case "baixa":
+        return "bg-[#212125] text-[#fff] pl-2 pr-2 rounded-[10px]";
+      default:
+        return "";
     }
   };
-
-  const getSituacaoColor = (situacao: string) => {
-    return situacao === "em-dia" ? "success" : "warning";
-  };
-
-{/* <p className={item.prioridade === "media" ? "bg-[#5822B1] text-[#fff] pl-2 pr-2 rounded-[10px]" : "text-yellow-500"}>
-                            {item.prioridade === "media" ? "Prioridade média" : "Prioridade baixa"}
-                          </p> */}
 
   const getPriorityIcon = (prioridade: string) => {
     switch (prioridade) {
-      case "alta": return <AlertTriangle className="h-4 w-4" />;
-      case "media": return <BarChart3 className="h-4 w-4" />;
-      case "baixa": return <TrendingUp className="h-4 w-4" />;
-      default: return <BarChart3 className="h-4 w-4" />;
+      case "alta":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "media":
+        return <BarChart3 className="h-4 w-4" />;
+      case "baixa":
+        return <TrendingUp className="h-4 w-4" />;
+      default:
+        return <BarChart3 className="h-4 w-4" />;
     }
+  };
+
+  // --- EXPORTAR PARA PDF ---
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Relatório de Itens", 14, 20);
+
+    const head = [["Título", "Quantidade", "Situação", "Prioridade", "Criado em"]];
+    const body = filteredItems.map((item) => [
+      item.titulo,
+      item.quantidade.toString(),
+      item.situacao === "em-dia" ? "Em Dia" : "Em Falta",
+      item.prioridade.charAt(0).toUpperCase() + item.prioridade.slice(1),
+      new Date(item.createdAt).toLocaleDateString("pt-BR"),
+    ]);
+
+    autoTable(doc, {
+      startY: 30,
+      head,
+      body,
+      theme: "grid",
+      headStyles: { fillColor: [22, 160, 133] },
+      styles: { fontSize: 10 },
+    });
+
+    doc.save("relatorio-itens.pdf");
   };
 
   return (
@@ -64,6 +113,7 @@ const Dashboard = () => {
       <Navbar />
 
       <div className="container mx-auto px-4 pt-24 pb-12">
+        {/* Título */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 bg-gradient-hero bg-clip-text text-transparent animate-fade-in">
             Dashboard de Estoque
@@ -102,7 +152,9 @@ const Dashboard = () => {
           <Card className="bg-gradient-card border-border shadow-card hover:shadow-glow transition-all duration-300 animate-scale-in">
             <CardContent className="p-4 text-center">
               <AlertTriangle className="h-8 w-8 mx-auto mb-2 text-destructive" />
-              <div className="text-2xl font-bold text-destructive">{stats.altaPrioridade}</div>
+              <div className="text-2xl font-bold text-destructive">
+                {stats.altaPrioridade}
+              </div>
               <div className="text-sm text-muted-foreground">Alta Prioridade</div>
             </CardContent>
           </Card>
@@ -110,8 +162,12 @@ const Dashboard = () => {
           <Card className="bg-gradient-card border-border shadow-card hover:shadow-glow transition-all duration-300 animate-scale-in">
             <CardContent className="p-4 text-center">
               <BarChart3 className="h-8 w-8 mx-auto mb-2 text-primary-glow" />
-              <div className="text-2xl font-bold text-primary-glow">{stats.quantidadeTotal}</div>
-              <div className="text-sm text-muted-foreground">Quantidade total de cada item</div>
+              <div className="text-2xl font-bold text-primary-glow">
+                {stats.quantidadeTotal}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Quantidade total de cada item
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -119,9 +175,14 @@ const Dashboard = () => {
         {/* Filtros */}
         <Card className="bg-gradient-card border-border shadow-card mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Filter className="h-5 w-5" />
-              <span>Filtros e Busca</span>
+            <CardTitle className="flex items-center space-x-2 justify-between">
+              <div className="flex items-center justify-center gap-2">
+                <Filter className="h-5 w-5" />
+                <span>Filtros e Busca</span>
+              </div>
+              <Button variant="secondary" className="ml-auto" onClick={exportToPDF}>
+                Exportar para PDF
+              </Button>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -135,7 +196,10 @@ const Dashboard = () => {
                 />
               </div>
               <div>
-                <Select value={filterPrioridade} onValueChange={setFilterPrioridade}>
+                <Select
+                  value={filterPrioridade}
+                  onValueChange={setFilterPrioridade}
+                >
                   <SelectTrigger className="bg-background/50">
                     <SelectValue placeholder="Filtrar por prioridade" />
                   </SelectTrigger>
@@ -163,35 +227,16 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-card border-border shadow-card">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Package className="h-5 w-5" />
-              <span>Itens ({filteredItems.length})</span>
-            </CardTitle>
-            <CardDescription>
-
-              {filteredItems.length === 0 && items.length > 0
-                ? <div className="text-center py-12 text-muted-foreground">
-                  <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg mb-2">
-                    {items.length === 0 ? "Nenhum item cadastrado ainda" : "Nenhum item encontrado"}
-                  </p>
-                  <p className="text-sm">
-                    {items.length === 0
-                      ? "Acesse a página de administração para começar a cadastrar itens"
-                      : "Tente ajustar os filtros de busca"}
-                  </p>
-                </div>
-                : <ListedItems items={items} />}
-            </CardDescription>
-          </CardHeader>
+        {/* Lista de Itens */}
+        <Card className="bg-gradient-card border-border shadow-card py-5">
           <CardContent>
             {filteredItems.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
                 <p className="text-lg mb-2">
-                  {items.length === 0 ? "Nenhum item cadastrado ainda" : "Nenhum item encontrado"}
+                  {items.length === 0
+                    ? "Nenhum item cadastrado ainda"
+                    : "Nenhum item encontrado"}
                 </p>
                 <p className="text-sm">
                   {items.length === 0
@@ -200,7 +245,7 @@ const Dashboard = () => {
                 </p>
               </div>
             ) : (
-              <div className="grid gap-4 max-h-[400px] overflow-y-auto">
+              <div className="grid gap-4 max-h-[430px] overflow-y-auto">
                 {filteredItems.map((item, index) => (
                   <div
                     key={item._id}
@@ -219,63 +264,44 @@ const Dashboard = () => {
                         <div className="flex flex-wrap gap-3 mb-3">
                           <div className="flex items-center space-x-2">
                             <Package className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm font-medium">Quantidade: {item.quantidade}</span>
+                            <span className="text-sm font-medium">
+                              Quantidade: {item.quantidade}
+                            </span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <Clock className="h-4 w-4 text-muted-foreground" />
                             <span className="text-sm text-muted-foreground">
-                              {/* {console.log(item.createdAt)} */}
-                              {new Date(item.createdAt).toLocaleDateString('pt-BR')}
-                              <br />
+                              {new Date(item.createdAt).toLocaleDateString("pt-BR")}
                             </span>
                           </div>
-                          {/* <Badge 
-                            variant={getSituacaoColor(item.situacao) as any}
-                            // className={item.situacao === "em-dia" ? "bg-success text-green" : "bg-warning text-black"}
-                            className={item.situacao === "em-dia" ? "text-success" : "text-yellow-500"}
+                          <p
+                            className={
+                              item.situacao === "em-dia"
+                                ? "text-success"
+                                : "text-yellow-500"
+                            }
                           >
-                            {item.situacao === "em-dia" ? "Em Dia" : "Em Falta"}
-                          </Badge> */}
-                          <p className={item.situacao === "em-dia" ? "text-success" : "text-yellow-500"}>
                             {item.situacao === "em-dia" ? "Em Dia" : "Em Falta"}
                           </p>
 
-                          {/* <p className={item.prioridade === "media" ? "bg-[#5822B1] text-[#fff] pl-2 pr-2 rounded-[10px]" : "text-yellow-500"}>
-                            {item.prioridade === "media" ? "Prioridade média" : "Prioridade baixa"}
-                          </p> */}
-                          {/* {switch (item.prioridade) {
-                           case "alta": return "destructive";
-                          case "media": return "default";
-                          case "baixa": return "secondary";
-                          default: return "default";
-                         }} */}
-
-                        <p className={getPriorityColor(item.prioridade)}>
-                          {item.prioridade === "alta" ? "Prioridade alta" : item.prioridade === "media" ? "Prioridade média" : "Prioridade baixa"}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2">
-                        {/* <Badge variant={getPriorityColor(item.prioridade) as any}>
-                            Prioridade: {item.prioridade.charAt(0).toUpperCase() + item.prioridade.slice(1)}
-                          </Badge> */}
-                        {/* <Badge 
-                            variant={getSituacaoColor(item.situacao) as any}
-                            className={item.situacao === "em-dia" ? "bg-success text-white" : "bg-warning text-black"}
-                          >
-                            {item.situacao === "em-dia" ? "Em Dia" : "Em Falta"}
-                          </Badge> */}
+                          <p className={getPriorityColor(item.prioridade)}>
+                            {item.prioridade === "alta"
+                              ? "Prioridade alta"
+                              : item.prioridade === "media"
+                              ? "Prioridade média"
+                              : "Prioridade baixa"}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  </div>
-            ))}
-          </div>
+                ))}
+              </div>
             )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
-    </div >
   );
 };
 
