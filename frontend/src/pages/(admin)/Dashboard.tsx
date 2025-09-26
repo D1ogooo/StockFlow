@@ -18,7 +18,7 @@ const Dashboard = () => {
       const matchesSearch = item.titulo.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesPrioridade = filterPrioridade === "todos" || item.prioridade === filterPrioridade;
       const matchesSituacao = filterSituacao === "todos" || item.situacao === filterSituacao;
-      
+
       return matchesSearch && matchesPrioridade && matchesSituacao;
     });
   }, [items, searchTerm, filterPrioridade, filterSituacao]);
@@ -35,9 +35,9 @@ const Dashboard = () => {
 
   const getPriorityColor = (prioridade: string) => {
     switch (prioridade) {
-      case "alta": return "destructive";
-      case "media": return "default";
-      case "baixa": return "secondary";
+      case "alta": return "bg-[#C13839] text-[#fff] pl-2 pr-2 rounded-[10px]";
+      case "media": return "bg-[#5822B1] text-[#fff] pl-2 pr-2 rounded-[10px]";
+      case "baixa": return "bg-[#212125] text-[#fff] pl-2 pr-2 rounded-[10px]";
       default: return "default";
     }
   };
@@ -45,6 +45,10 @@ const Dashboard = () => {
   const getSituacaoColor = (situacao: string) => {
     return situacao === "em-dia" ? "success" : "warning";
   };
+
+{/* <p className={item.prioridade === "media" ? "bg-[#5822B1] text-[#fff] pl-2 pr-2 rounded-[10px]" : "text-yellow-500"}>
+                            {item.prioridade === "media" ? "Prioridade média" : "Prioridade baixa"}
+                          </p> */}
 
   const getPriorityIcon = (prioridade: string) => {
     switch (prioridade) {
@@ -58,7 +62,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <div className="container mx-auto px-4 pt-24 pb-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 bg-gradient-hero bg-clip-text text-transparent animate-fade-in">
@@ -166,19 +170,19 @@ const Dashboard = () => {
               <span>Itens ({filteredItems.length})</span>
             </CardTitle>
             <CardDescription>
-              
-              {filteredItems.length === 0 && items.length > 0 
+
+              {filteredItems.length === 0 && items.length > 0
                 ? <div className="text-center py-12 text-muted-foreground">
-                <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg mb-2">
-                  {items.length === 0 ? "Nenhum item cadastrado ainda" : "Nenhum item encontrado"}
-                </p>
-                <p className="text-sm">
-                  {items.length === 0 
-                    ? "Acesse a página de administração para começar a cadastrar itens" 
-                    : "Tente ajustar os filtros de busca"}
-                </p>
-              </div>
+                  <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg mb-2">
+                    {items.length === 0 ? "Nenhum item cadastrado ainda" : "Nenhum item encontrado"}
+                  </p>
+                  <p className="text-sm">
+                    {items.length === 0
+                      ? "Acesse a página de administração para começar a cadastrar itens"
+                      : "Tente ajustar os filtros de busca"}
+                  </p>
+                </div>
                 : <ListedItems items={items} />}
             </CardDescription>
           </CardHeader>
@@ -190,8 +194,8 @@ const Dashboard = () => {
                   {items.length === 0 ? "Nenhum item cadastrado ainda" : "Nenhum item encontrado"}
                 </p>
                 <p className="text-sm">
-                  {items.length === 0 
-                    ? "Acesse a página de administração para começar a cadastrar itens" 
+                  {items.length === 0
+                    ? "Acesse a página de administração para começar a cadastrar itens"
                     : "Tente ajustar os filtros de busca"}
                 </p>
               </div>
@@ -211,7 +215,7 @@ const Dashboard = () => {
                             {getPriorityIcon(item.prioridade)}
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-3 mb-3">
                           <div className="flex items-center space-x-2">
                             <Package className="h-4 w-4 text-muted-foreground" />
@@ -220,32 +224,58 @@ const Dashboard = () => {
                           <div className="flex items-center space-x-2">
                             <Clock className="h-4 w-4 text-muted-foreground" />
                             <span className="text-sm text-muted-foreground">
-                              {new Date(item.criadoEm).toLocaleDateString('pt-BR')}
+                              {/* {console.log(item.createdAt)} */}
+                              {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                              <br />
                             </span>
                           </div>
-                        </div>
+                          {/* <Badge 
+                            variant={getSituacaoColor(item.situacao) as any}
+                            // className={item.situacao === "em-dia" ? "bg-success text-green" : "bg-warning text-black"}
+                            className={item.situacao === "em-dia" ? "text-success" : "text-yellow-500"}
+                          >
+                            {item.situacao === "em-dia" ? "Em Dia" : "Em Falta"}
+                          </Badge> */}
+                          <p className={item.situacao === "em-dia" ? "text-success" : "text-yellow-500"}>
+                            {item.situacao === "em-dia" ? "Em Dia" : "Em Falta"}
+                          </p>
 
-                        <div className="flex flex-wrap gap-2">
-                          <Badge variant={getPriorityColor(item.prioridade) as any}>
+                          {/* <p className={item.prioridade === "media" ? "bg-[#5822B1] text-[#fff] pl-2 pr-2 rounded-[10px]" : "text-yellow-500"}>
+                            {item.prioridade === "media" ? "Prioridade média" : "Prioridade baixa"}
+                          </p> */}
+                          {/* {switch (item.prioridade) {
+                           case "alta": return "destructive";
+                          case "media": return "default";
+                          case "baixa": return "secondary";
+                          default: return "default";
+                         }} */}
+
+                        <p className={getPriorityColor(item.prioridade)}>
+                          {item.prioridade === "alta" ? "Prioridade alta" : item.prioridade === "media" ? "Prioridade média" : "Prioridade baixa"}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {/* <Badge variant={getPriorityColor(item.prioridade) as any}>
                             Prioridade: {item.prioridade.charAt(0).toUpperCase() + item.prioridade.slice(1)}
-                          </Badge>
-                          <Badge 
+                          </Badge> */}
+                        {/* <Badge 
                             variant={getSituacaoColor(item.situacao) as any}
                             className={item.situacao === "em-dia" ? "bg-success text-white" : "bg-warning text-black"}
                           >
                             {item.situacao === "em-dia" ? "Em Dia" : "Em Falta"}
-                          </Badge>
-                        </div>
+                          </Badge> */}
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  </div>
+            ))}
+          </div>
             )}
-          </CardContent>
-        </Card>
-      </div>
+        </CardContent>
+      </Card>
     </div>
+    </div >
   );
 };
 

@@ -46,7 +46,10 @@ export const ItemsProvider = ({ children }: { children: ReactNode }) => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => setItems(res.data))
+      .then((res) => {
+        setItems(res.data)
+        console.log(res.data)
+      })
       .catch((error) => console.error("Erro ao buscar itens:", error));
   }, [user]);
 

@@ -50,7 +50,8 @@ export type Payment = {
   prioridade: "baixa" | "media" | "alta",
   quantidade: number,
   situacao: "em-dia" | "em-falta",
-  date: string
+  date: string,
+  createdAt: string,
 }
 
 const data: Payment[] = [
@@ -60,6 +61,7 @@ const data: Payment[] = [
     prioridade: "baixa",
     situacao: "em-falta",
     quantidade: 0,
+    createdAt: "2025-05-12T15:30:00Z",
     date: "12/05/2025",
   },
   {
@@ -78,16 +80,16 @@ const data: Payment[] = [
 export const columns: ColumnDef<Payment>[] = [
   {
     id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
+    // header: ({ table }) => (
+    //   <Checkbox
+    //     checked={
+    //       table.getIsAllPageRowsSelected() ||
+    //       (table.getIsSomePageRowsSelected() && "indeterminate")
+    //     }
+    //     onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+    //     aria-label="Select all"
+    //   />
+    // ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
@@ -169,7 +171,9 @@ export const columns: ColumnDef<Payment>[] = [
 
     cell: ({ row }) => {
       const ab = row.original.createdAt
+      console.log(ab)
       return <div className="lowercase">{format(ab, "dd/MM/yyyy HH:mm")}</div>
+      // return <div className="lowercase">{console.log(row)}</div>
     },
   },
 ]
@@ -218,6 +222,8 @@ export function ListedItems({ items }: { items: Item[] }) {
       rowSelection,
     },
   })
+  // console.log(table.getSelectedRowModel().flatRows)
+  // console.log(data)
 
   return (
     <div className="w-full">
